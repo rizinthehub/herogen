@@ -66,41 +66,46 @@ def create_full_pdf(story_data, image_urls):
     title = _safe_text(story_data.get("title", "My Story"))
     image_paths = _download_all_images(image_urls)
 
+    # COVER PAGE
     pdf.add_page()
-    pdf.set_font("Helvetica", "B", 32)
-    pdf.ln(20)
-    pdf.multi_cell(0, 16, title, align="C")
-    pdf.ln(5)
-    pdf.set_font("Helvetica", "I", 14)
-    pdf.cell(0, 10, "A Personalized Story by HeroGen", align="C")
+    pdf.set_font("Helvetica", "B", 30)
+    pdf.ln(15)
+    pdf.multi_cell(0, 14, title, align="C")
+    pdf.ln(3)
+    pdf.set_font("Helvetica", "I", 12)
+    pdf.cell(0, 8, "A Personalized Story by HeroGen", align="C")
     if image_paths and image_paths[0]:
         try:
-            pdf.image(image_paths[0], x=30, y=80, w=150)
+            pdf.image(image_paths[0], x=30, y=75, w=150)
         except Exception:
             pass
 
+    # STORY PAGES
     for i, page in enumerate(story_data.get("pages", [])):
         pdf.add_page()
-        pdf.set_font("Helvetica", "B", 11)
+
+        # Page number
+        pdf.set_font("Helvetica", "B", 10)
         pdf.set_text_color(150, 150, 150)
-        pdf.cell(0, 6, f"Page {page.get('page_num', i+1)}", align="C")
+        pdf.cell(0, 5, f"Page {page.get('page_num', i+1)}", align="C")
         pdf.set_text_color(0, 0, 0)
 
+                # Image - 70% of page height
         if i < len(image_paths) and image_paths[i]:
             try:
-                pdf.image(image_paths[i], x=35, y=18, w=140)
+                pdf.image(image_paths[i], x=20, y=16, w=170)
             except Exception:
                 pass
 
-        pdf.set_y(155)
-        pdf.set_draw_color(255, 200, 150)
-        pdf.set_line_width(0.8)
-        pdf.line(20, 153, 190, 153)
-        pdf.ln(5)
-        pdf.set_font("Helvetica", "", 15)
-        pdf.set_text_color(40, 40, 40)
-        pdf.multi_cell(170, 9, _safe_text(page.get("text", "")), align="L")
+        # Text below image - 30% of page
+        pdf.set_y(200)
+        pdf.ln(4)
 
+        pdf.set_font("Helvetica", "B", 16)
+        pdf.set_text_color(40, 40, 40)
+        pdf.multi_cell(160, 8, _safe_text(page.get("text", "")), align="L")
+
+    # COLORING PAGES
     for i, img_path in enumerate(image_paths):
         if img_path:
             pdf.add_page()
@@ -116,72 +121,79 @@ def create_full_pdf(story_data, image_urls):
                     pass
                 os.unlink(coloring_path)
 
+    # TEACHER'S GUIDE
     pdf.add_page()
+
+    # Header bar - TALLER to avoid overlap
     pdf.set_fill_color(78, 205, 196)
-    pdf.rect(0, 0, 210, 30, "F")
-    pdf.set_font("Helvetica", "B", 26)
+    pdf.rect(0, 0, 210, 40, "F")
+    pdf.set_font("Helvetica", "B", 24)
     pdf.set_text_color(255, 255, 255)
-    pdf.set_y(5)
-    pdf.cell(0, 12, "Teacher's Guide", align="C")
-    pdf.ln(3)
-    pdf.set_font("Helvetica", "I", 11)
-    pdf.cell(0, 8, f"Story: {title}", align="C")
+    pdf.set_y(8)
+    pdf.cell(0, 10, "Teacher's Guide", align="C")
+    pdf.ln(12)
+    pdf.set_font("Helvetica", "", 10)
+    pdf.cell(0, 6, f"Story: {title}", align="C")
+
     pdf.set_text_color(0, 0, 0)
-    pdf.set_y(40)
+    pdf.set_y(50)
 
     edu = story_data.get("edu_sheet", {})
 
-    pdf.set_font("Helvetica", "B", 16)
+    # Story Summary
+    pdf.set_font("Helvetica", "B", 14)
     pdf.set_text_color(78, 205, 196)
-    pdf.cell(0, 10, "Story Summary")
-    pdf.ln(10)
-    pdf.set_font("Helvetica", "", 11)
+    pdf.cell(0, 8, "Story Summary")
+    pdf.ln(8)
+    pdf.set_font("Helvetica", "", 10)
     pdf.set_text_color(60, 60, 60)
     pages_data = story_data.get("pages", [])
     if pages_data:
-        pdf.multi_cell(170, 7, _safe_text(pages_data[0].get("text", "")))
+        pdf.multi_cell(170, 6, _safe_text(pages_data[0].get("text", "")))
         if len(pages_data) > 1:
             pdf.ln(2)
-            last_text = _safe_text(pages_data[-1].get("text", ""))
-            pdf.multi_cell(170, 7, "The story concludes: " + last_text)
-    pdf.ln(8)
+            pdf.multi_cell(170, 6, "The story concludes: " + _safe_text(pages_data[-1].get("text", "")))
+    pdf.ln(6)
 
-    pdf.set_font("Helvetica", "B", 16)
+    # Vocabulary
+    pdf.set_font("Helvetica", "B", 14)
     pdf.set_text_color(255, 107, 107)
-    pdf.cell(0, 10, "Vocabulary Words")
-    pdf.ln(10)
+    pdf.cell(0, 8, "Vocabulary Words")
+    pdf.ln(8)
     pdf.set_text_color(60, 60, 60)
     for idx, word in enumerate(edu.get("vocab", []), 1):
-        pdf.set_font("Helvetica", "B", 12)
-        pdf.cell(10, 8, f"{idx}.")
-        pdf.set_font("Helvetica", "", 11)
-        pdf.multi_cell(160, 7, f" {_safe_text(word)}")
-        pdf.ln(4)
-    pdf.ln(5)
+        pdf.set_font("Helvetica", "B", 11)
+        pdf.cell(10, 7, f"{idx}.")
+        pdf.set_font("Helvetica", "", 10)
+        pdf.multi_cell(160, 6, f" {_safe_text(word)}")
+        pdf.ln(3)
+    pdf.ln(4)
 
-    pdf.set_font("Helvetica", "B", 16)
+    # Discussion Questions
+    pdf.set_font("Helvetica", "B", 14)
     pdf.set_text_color(78, 205, 196)
-    pdf.cell(0, 10, "Discussion Questions")
-    pdf.ln(10)
+    pdf.cell(0, 8, "Discussion Questions")
+    pdf.ln(8)
     pdf.set_text_color(60, 60, 60)
     for idx, q in enumerate(edu.get("discussion", []), 1):
-        pdf.set_font("Helvetica", "B", 12)
-        pdf.cell(10, 8, f"Q{idx}.")
-        pdf.set_font("Helvetica", "", 11)
-        pdf.multi_cell(160, 7, f" {_safe_text(q)}")
-        pdf.ln(2)
-        pdf.set_font("Helvetica", "I", 10)
+        pdf.set_font("Helvetica", "B", 11)
+        pdf.cell(10, 7, f"Q{idx}.")
+        pdf.set_font("Helvetica", "", 10)
+        pdf.multi_cell(160, 6, f" {_safe_text(q)}")
+        pdf.ln(1)
+        pdf.set_font("Helvetica", "I", 9)
         pdf.set_text_color(180, 180, 180)
-        pdf.cell(10, 6, "")
-        pdf.cell(0, 6, "Answer: _______________________________________________")
-        pdf.ln(6)
+        pdf.cell(10, 5, "")
+        pdf.cell(0, 5, "Answer: _______________________________________________")
+        pdf.ln(5)
         pdf.set_text_color(60, 60, 60)
-    pdf.ln(5)
+    pdf.ln(4)
 
-    pdf.set_font("Helvetica", "B", 16)
+    # Activities
+    pdf.set_font("Helvetica", "B", 14)
     pdf.set_text_color(255, 107, 107)
-    pdf.cell(0, 10, "Classroom Activities")
-    pdf.ln(10)
+    pdf.cell(0, 8, "Classroom Activities")
+    pdf.ln(8)
     pdf.set_text_color(60, 60, 60)
     activities = [
         "Ask children to draw their own version of the moral lesson.",
@@ -191,18 +203,19 @@ def create_full_pdf(story_data, image_urls):
         "Art project: Create a poster showing the moral.",
     ]
     for idx, act in enumerate(activities, 1):
-        pdf.set_font("Helvetica", "B", 11)
-        pdf.cell(10, 7, f"{idx}.")
-        pdf.set_font("Helvetica", "", 11)
-        pdf.multi_cell(160, 7, f" {act}")
-        pdf.ln(3)
+        pdf.set_font("Helvetica", "B", 10)
+        pdf.cell(10, 6, f"{idx}.")
+        pdf.set_font("Helvetica", "", 10)
+        pdf.multi_cell(160, 6, f" {act}")
+        pdf.ln(2)
 
+    # Learning Objectives
     pdf.ln(3)
-    pdf.set_font("Helvetica", "B", 16)
+    pdf.set_font("Helvetica", "B", 14)
     pdf.set_text_color(78, 205, 196)
-    pdf.cell(0, 10, "Learning Objectives")
-    pdf.ln(10)
-    pdf.set_font("Helvetica", "", 11)
+    pdf.cell(0, 8, "Learning Objectives")
+    pdf.ln(8)
+    pdf.set_font("Helvetica", "", 10)
     pdf.set_text_color(60, 60, 60)
     objectives = [
         "Identify and understand the moral theme.",
@@ -212,14 +225,14 @@ def create_full_pdf(story_data, image_urls):
         "Express creativity through coloring and drawing.",
     ]
     for obj in objectives:
-        pdf.cell(8, 7, "")
-        pdf.cell(170, 7, "- " + obj)
-        pdf.ln(6)
+        pdf.cell(8, 6, "")
+        pdf.cell(170, 6, "- " + obj)
+        pdf.ln(5)
 
-    pdf.ln(8)
-    pdf.set_font("Helvetica", "I", 9)
+    pdf.ln(6)
+    pdf.set_font("Helvetica", "I", 8)
     pdf.set_text_color(180, 180, 180)
-    pdf.cell(0, 8, "Generated by HeroGen", align="C")
+    pdf.cell(0, 6, "Generated by HeroGen - AI-Powered Educational Storybooks", align="C")
 
     _cleanup_paths(image_paths)
     return bytes(pdf.output())
@@ -258,18 +271,21 @@ def create_edu_pdf(story_data):
     title = _safe_text(story_data.get("title", "Story"))
     edu = story_data.get("edu_sheet", {})
 
+    # Header - TALLER bar
     pdf.set_fill_color(78, 205, 196)
-    pdf.rect(0, 0, 210, 30, "F")
-    pdf.set_font("Helvetica", "B", 26)
+    pdf.rect(0, 0, 210, 40, "F")
+    pdf.set_font("Helvetica", "B", 24)
     pdf.set_text_color(255, 255, 255)
-    pdf.set_y(5)
-    pdf.cell(0, 12, "Teacher's Guide", align="C")
-    pdf.ln(3)
-    pdf.set_font("Helvetica", "I", 11)
-    pdf.cell(0, 8, f"Story: {title}", align="C")
-    pdf.set_text_color(0, 0, 0)
-    pdf.set_y(40)
+    pdf.set_y(8)
+    pdf.cell(0, 10, "Teacher's Guide", align="C")
+    pdf.ln(12)
+    pdf.set_font("Helvetica", "", 10)
+    pdf.cell(0, 6, f"Story: {title}", align="C")
 
+    pdf.set_text_color(0, 0, 0)
+    pdf.set_y(50)
+
+    # Vocabulary
     pdf.set_font("Helvetica", "B", 16)
     pdf.set_text_color(255, 107, 107)
     pdf.cell(0, 10, "Vocabulary Words")
@@ -283,6 +299,7 @@ def create_edu_pdf(story_data):
         pdf.ln(5)
     pdf.ln(8)
 
+    # Discussion Questions
     pdf.set_font("Helvetica", "B", 16)
     pdf.set_text_color(78, 205, 196)
     pdf.cell(0, 10, "Discussion Questions")
@@ -302,6 +319,7 @@ def create_edu_pdf(story_data):
         pdf.set_text_color(60, 60, 60)
     pdf.ln(8)
 
+    # Activities
     pdf.set_font("Helvetica", "B", 16)
     pdf.set_text_color(255, 107, 107)
     pdf.cell(0, 10, "Suggested Activities")
