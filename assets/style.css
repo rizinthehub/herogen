@@ -1,0 +1,44 @@
+/* HeroGen Styles */
+
+.stApp {
+    background-color: #FFF9F0;
+}
+
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+
+.stButton > button {
+    border-radius: 25px !important;
+    font-weight: 600 !important;
+    padding: 8px 24px !important;
+    transition: transform 0.2s ease !important;
+}
+
+.stButton > button:hover {
+    transform: scale(1.03);
+}
+
+.stDownloadButton > button {
+    border-radius: 15px !important;
+    font-weight: 600 !important;
+}
+
+.stFileUploader {
+    border-radius: 12px;
+}
+
+.stRadio > div {
+    gap: 10px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #333333 !important;
+}
+
+p, span, label {
+    color: #333333;
+}
+
+h1[style], h2[style], h3[style] {
+    color: inherit !important;
+}
