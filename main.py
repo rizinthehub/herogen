@@ -12,10 +12,21 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+import logging
+logging.getLogger('streamlit').setLevel(logging.ERROR)
+
 try:
-    for key in ['OPENAI_API_KEY', 'REPLICATE_API_TOKEN', 'MONGODB_URI']:
-        if key in st.secrets:
-            os.environ[key] = st.secrets[key]
+    secrets_available = False
+    try:
+        if len(st.secrets) > 0:
+            secrets_available = True
+    except Exception:
+        pass
+
+    if secrets_available:
+        for key in ['OPENAI_API_KEY', 'REPLICATE_API_TOKEN', 'MONGODB_URI']:
+            if key in st.secrets:
+                os.environ[key] = st.secrets[key]
 except Exception:
     pass
 
