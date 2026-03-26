@@ -1,44 +1,143 @@
-/* HeroGen Styles */
+/* HeroGen — Clean Theme */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
 
 .stApp {
-    background-color: #FFF9F0;
+    background: linear-gradient(180deg, #D6EAF8 0%, #E8F4FD 50%, #F0F7FF 100%) !important;
+    min-height: 100vh;
 }
 
-#MainMenu {visibility: hidden;}
+.stApp * {
+    font-family: 'Nunito', sans-serif !important;
+}
+
+/* Keep Streamlit's own top bar — only hide footer */
 footer {visibility: hidden;}
 
-.stButton > button {
+/* ========== PRIMARY BUTTONS (Orange) ========== */
+.stButton > button[kind="primary"],
+div[data-testid="stButton"] > button[kind="primary"] {
+    background-color: #E67E22 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 25px !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    padding: 12px 32px !important;
+    height: 50px !important;
+    box-shadow: 0 3px 10px rgba(230, 126, 34, 0.35) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+}
+
+.stButton > button[kind="primary"]:hover,
+div[data-testid="stButton"] > button[kind="primary"]:hover {
+    transform: scale(1.03) !important;
+    box-shadow: 0 5px 15px rgba(230, 126, 34, 0.45) !important;
+    background-color: #CF6D17 !important;
+}
+
+/* ========== SECONDARY BUTTONS ========== */
+.stButton > button:not([kind="primary"]) {
+    background-color: white !important;
+    color: #5A6B7D !important;
+    border: 2px solid #BDC9D9 !important;
     border-radius: 25px !important;
     font-weight: 600 !important;
-    padding: 8px 24px !important;
-    transition: transform 0.2s ease !important;
+    padding: 10px 28px !important;
+    height: 44px !important;
+    transition: all 0.2s ease !important;
 }
 
-.stButton > button:hover {
-    transform: scale(1.03);
+.stButton > button:not([kind="primary"]):hover {
+    border-color: #2B6CB0 !important;
+    color: #2B6CB0 !important;
 }
 
+/* ========== DOWNLOAD BUTTONS ========== */
 .stDownloadButton > button {
-    border-radius: 15px !important;
+    background-color: white !important;
+    color: #2B6CB0 !important;
+    border: 2px solid #2B6CB0 !important;
+    border-radius: 20px !important;
+    font-weight: 700 !important;
+    padding: 10px 24px !important;
+    transition: all 0.2s ease !important;
+}
+
+.stDownloadButton > button:hover {
+    background-color: #2B6CB0 !important;
+    color: white !important;
+}
+
+/* ========== PROGRESS BAR ========== */
+.stProgress > div > div > div > div {
+    background: linear-gradient(90deg, #2B6CB0, #E67E22) !important;
+    border-radius: 4px !important;
+}
+
+.stProgress > div > div > div {
+    background-color: #E0ECF8 !important;
+    border-radius: 4px !important;
+}
+
+/* ========== TEXT INPUTS ========== */
+.stTextInput > div > div > input {
+    border: 1.5px solid #D0DFF0 !important;
+    border-radius: 10px !important;
+    font-size: 15px !important;
+    color: #2B3A4A !important;
+    height: 44px !important;
+    padding: 10px 14px !important;
+    background-color: #FFFFFF !important;
+}
+
+.stTextInput > div > div > input:focus {
+    border-color: #2B6CB0 !important;
+    box-shadow: 0 0 0 2px rgba(43, 108, 176, 0.15) !important;
+}
+
+/* ========== SELECTBOX ========== */
+.stSelectbox > div > div {
+    border: 1.5px solid #D0DFF0 !important;
+    border-radius: 10px !important;
+    color: #2B3A4A !important;
+    background-color: #FFFFFF !important;
+}
+
+/* ========== LABELS ========== */
+.stTextInput > label,
+.stSelectbox > label,
+.stFileUploader > label,
+.stRadio > label {
+    font-size: 14px !important;
     font-weight: 600 !important;
+    color: #2B3A4A !important;
 }
 
-.stFileUploader {
-    border-radius: 12px;
+/* ========== HEADINGS ========== */
+h1 { color: #2B3A4A !important; font-weight: 800 !important; }
+h2, h3 { color: #2B3A4A !important; font-weight: 700 !important; }
+
+/* ========== RADIO ========== */
+.stRadio > div { gap: 12px; }
+
+/* ========== FILE UPLOADER ========== */
+.stFileUploader > div > div {
+    border: 2px dashed #D0DFF0 !important;
+    border-radius: 12px !important;
+    background-color: #FAFCFF !important;
 }
 
-.stRadio > div {
-    gap: 10px;
-}
+/* ========== ALERTS ========== */
+.stAlert { border-radius: 12px !important; }
 
-h1, h2, h3, h4, h5, h6 {
-    color: #333333 !important;
-}
+/* ========== DIVIDER ========== */
+hr { border-color: #E0ECF8 !important; }
 
-p, span, label {
-    color: #333333;
-}
-
-h1[style], h2[style], h3[style] {
-    color: inherit !important;
+/* ========== WHITE CARD for st.container ========== */
+div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlockBorderWrapper"] {
+    background: #FFFFFF !important;
+    border-radius: 20px !important;
+    box-shadow: 0 4px 16px rgba(43, 108, 176, 0.10) !important;
+    border: 1px solid #E0ECF8 !important;
+    padding: 32px !important;
 }

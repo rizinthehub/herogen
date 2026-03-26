@@ -3,6 +3,21 @@ import json
 import os
 
 
+def _validate_story_data(story_data):
+    pages = story_data.get("pages", [])
+    for page in pages:
+        options = page.get("options", [])
+        if not isinstance(options, list) or len(options) != 2:
+            page["options"] = ["Do the right thing", "Do the wrong thing"]
+
+        page["correct_answer"] = 0
+
+        if not page.get("quiz"):
+            page["quiz"] = "What is the right thing to do?"
+
+    return story_data
+
+
 def generate_story(name, age, gender, moral):
     """Call OpenAI to generate a 5-page children's story as JSON."""
     client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -26,7 +41,8 @@ def generate_story(name, age, gender, moral):
             "richer vocabulary, character emotions and growth"
         )
 
-    system_prompt = f"""You are an expert children's book author and illustrator director.
+    system_prompt = f"""
+You are an expert children's book author and illustrator director.
 
 INPUTS:
 - Child's Name: {name}
@@ -34,19 +50,25 @@ INPUTS:
 - Age: {age}
 - Moral Theme: {moral}
 
-TASK: Write a 5-page children's story where {name} is the hero who learns about {moral}.
+TASK:
+Write a 5-page children's story where {name} is the hero who learns about {moral}.
 
 CONSTRAINTS:
 - Use {complexity}.
-- Maximum {word_limit} words per page of story text.
-- No violence, scary themes, or inappropriate content whatsoever.
+- Maximum {word_limit} words per page.
+- No violence, scary themes, or inappropriate content.
 - {name} is a {gender.lower()} child aged {age}.
-- For each page, write a DETAILED visual description for an illustrator.
-- For each page, create a moral-related quiz question with exactly 2 options.
-- The FIRST option (index 0) MUST always be the correct/moral answer.
-- The story should have a clear beginning, middle, and end with a moral lesson.
+- For each page, write a detailed visual description for an illustrator.
+- For each page, create 1 quiz question based ONLY on that page text.
+- Each quiz must have exactly 2 options.
+- Option 0 MUST be the correct answer.
+- Option 1 MUST be the wrong answer.
+- The correct answer must clearly match the page story.
+- The wrong answer must be believable but incorrect.
+- Keep the story structure clear: beginning, middle, end.
 
-OUTPUT FORMAT: Return ONLY valid JSON with this exact structure:
+OUTPUT FORMAT:
+Return ONLY valid JSON with this exact structure:
 {{
   "title": "A Creative Story Title",
   "pages": [
@@ -54,39 +76,7 @@ OUTPUT FORMAT: Return ONLY valid JSON with this exact structure:
       "page_num": 1,
       "text": "Story text for page 1...",
       "image_prompt": "A detailed visual scene description...",
-      "quiz": "A question about the right thing to do...",
-      "options": ["The correct moral answer", "The wrong answer"],
-      "correct_answer": 0
-    }},
-    {{
-      "page_num": 2,
-      "text": "Story text for page 2...",
-      "image_prompt": "A detailed visual scene description...",
-      "quiz": "Question for page 2...",
-      "options": ["Correct answer", "Wrong answer"],
-      "correct_answer": 0
-    }},
-    {{
-      "page_num": 3,
-      "text": "Story text for page 3...",
-      "image_prompt": "A detailed visual scene description...",
-      "quiz": "Question for page 3...",
-      "options": ["Correct answer", "Wrong answer"],
-      "correct_answer": 0
-    }},
-    {{
-      "page_num": 4,
-      "text": "Story text for page 4...",
-      "image_prompt": "A detailed visual scene description...",
-      "quiz": "Question for page 4...",
-      "options": ["Correct answer", "Wrong answer"],
-      "correct_answer": 0
-    }},
-    {{
-      "page_num": 5,
-      "text": "Story text for page 5...",
-      "image_prompt": "A detailed visual scene description...",
-      "quiz": "Question for page 5...",
+      "quiz": "A question about page 1 only...",
       "options": ["Correct answer", "Wrong answer"],
       "correct_answer": 0
     }}
@@ -95,7 +85,8 @@ OUTPUT FORMAT: Return ONLY valid JSON with this exact structure:
     "vocab": ["Word1 - definition", "Word2 - definition", "Word3 - definition"],
     "discussion": ["Discussion question 1?", "Discussion question 2?"]
   }}
-}}"""
+}}
+"""
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -114,4 +105,4 @@ OUTPUT FORMAT: Return ONLY valid JSON with this exact structure:
     )
 
     story_data = json.loads(response.choices[0].message.content)
-    return story_data
+    return _validate_story_data(story_data)
