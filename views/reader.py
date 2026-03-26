@@ -2,7 +2,6 @@ import streamlit as st
 import time
 import random
 
-
 def _normalize_text(value: str) -> str:
     return " ".join((value or "").strip().lower().split())
 
@@ -61,102 +60,105 @@ def show():
         unsafe_allow_html=True,
     )
 
-    # Image and Text side by side
-    img_col, text_col = st.columns([2, 3])
+    # ── LEFT column: story text + quiz  |  RIGHT column: image ──
+    left_col, right_col = st.columns([3, 2])
 
-    with img_col:
-        if page_idx < len(images) and images[page_idx]:
-            st.image(images[page_idx], use_column_width=True)
-
-    with text_col:
+    # ── LEFT: story text ──────────────────────────────────────────
+    with left_col:
         st.markdown(
             f"""<div style="font-size:26px; line-height:1.9; padding:25px;
                 background-color:#FFFDF5; border-radius:12px;
-                border:2px solid #FFE5B4; color:#2B3A4A; font-weight:500;">
+                border:2px solid #FFE5B4; color:#2B3A4A; font-weight:500;
+                margin-bottom:20px;">
                 {page.get('text', '')}</div>""",
             unsafe_allow_html=True,
         )
 
-    # Quiz section
-    quiz_question = page.get("quiz", "What do you think?")
-    options = page.get("options", ["Option A", "Option B"])
-    correct_idx = page.get("correct_answer", 0)
+        # Quiz section
+        quiz_question = page.get("quiz", "What do you think?")
+        options = page.get("options", ["Option A", "Option B"])
+        correct_idx = page.get("correct_answer", 0)
 
-    if not isinstance(correct_idx, int):
-        correct_idx = 0
-    if correct_idx < 0 or correct_idx >= len(options):
-        correct_idx = 0
+        if not isinstance(correct_idx, int):
+            correct_idx = 0
+        if correct_idx < 0 or correct_idx >= len(options):
+            correct_idx = 0
 
-    correct_answer = options[correct_idx]
+        correct_answer = options[correct_idx]
 
-    # Shuffle once per page
-    shuffle_key = f"shuffled_{page_idx}"
-    if shuffle_key not in st.session_state:
-        shuffled = options.copy()
-        random.shuffle(shuffled)
-        st.session_state[shuffle_key] = shuffled
+        # Shuffle once per page
+        shuffle_key = f"shuffled_{page_idx}"
+        if shuffle_key not in st.session_state:
+            shuffled = options.copy()
+            random.shuffle(shuffled)
+            st.session_state[shuffle_key] = shuffled
 
-    shuffled_options = st.session_state[shuffle_key]
+        shuffled_options = st.session_state[shuffle_key]
 
-    # Quiz banner
-    st.markdown(
-        f"""
-        <div style="text-align:center; margin:20px 0 8px 0;">
-            <span style="background:#EBF4FF; color:#2B6CB0; font-weight:600;
-                         font-size:15px; padding:8px 20px; border-radius:20px;
-                         display:inline-block;">
-                Complete the Task to Continue
-            </span>
-        </div>
-        <div style="text-align:center; font-size:14px; color:#5A6B7D; margin-bottom:12px;">
-            {quiz_question}
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    # Colored option pills
-    option_colors = ["#E74C3C", "#2B6CB0", "#27AE60"]
-    pills_html = ""
-    for i, opt in enumerate(shuffled_options):
-        color = option_colors[i % 3]
-        pills_html += (
-            f'<span style="display:inline-block; border:2px solid {color};'
-            f' border-radius:25px; padding:6px 18px; margin:4px 6px;'
-            f' color:{color}; font-weight:600; font-size:13px;">'
-            f'{opt}</span>'
+        # Quiz banner
+        st.markdown(
+            f"""
+            <div style="margin:0 0 8px 0;">
+                <span style="background:#EBF4FF; color:#2B6CB0; font-weight:600;
+                             font-size:15px; padding:8px 20px; border-radius:20px;
+                             display:inline-block;">
+                    Complete the Task to Continue
+                </span>
+            </div>
+            <div style="font-size:14px; color:#5A6B7D; margin-bottom:12px;">
+                {quiz_question}
+            </div>
+            """,
+            unsafe_allow_html=True,
         )
 
-    st.markdown(
-        f'<div style="text-align:center; margin-bottom:8px;">{pills_html}</div>',
-        unsafe_allow_html=True,
-    )
+        # Colored option pills
+        option_colors = ["#E74C3C", "#2B6CB0", "#27AE60"]
+        pills_html = ""
+        for i, opt in enumerate(shuffled_options):
+            color = option_colors[i % 3]
+            pills_html += (
+                f'<span style="display:inline-block; border:2px solid {color};'
+                f' border-radius:25px; padding:6px 18px; margin:4px 6px;'
+                f' color:{color}; font-weight:600; font-size:13px;">'
+                f'{opt}</span>'
+            )
 
-    # Functional radio
-    answer = st.radio(
-        "Choose your answer:",
-        shuffled_options,
-        key=f"quiz_{page_idx}",
-        label_visibility="collapsed",
-    )
+        st.markdown(
+            f'<div style="margin-bottom:8px;">{pills_html}</div>',
+            unsafe_allow_html=True,
+        )
 
-    # Bottom buttons
-    btn_l, btn_spacer, btn_r = st.columns([1, 2, 1])
+        # Functional radio
+        answer = st.radio(
+            "Choose your answer:",
+            shuffled_options,
+            key=f"quiz_{page_idx}",
+            label_visibility="collapsed",
+        )
 
-    with btn_l:
-        if st.button("📖 Re-read Page", key=f"reread_{page_idx}"):
-            st.rerun()
+        # Bottom buttons
+        btn_l, btn_spacer, btn_r = st.columns([1, 2, 1])
 
-    with btn_r:
-        if st.button(
-            "Continue ➡️",
-            key=f"continue_{page_idx}",
-            type="primary",
-        ):
-            if _normalize_text(answer) == _normalize_text(correct_answer):
-                st.success("🎉 Correct!")
-                st.session_state.current_page += 1
-                time.sleep(0.5)
+        with btn_l:
+            if st.button("📖 Re-read Page", key=f"reread_{page_idx}"):
                 st.rerun()
-            else:
-                st.error("Not quite right! Try a different answer. 💪")
+
+        with btn_r:
+            if st.button(
+                "Continue ➡️",
+                key=f"continue_{page_idx}",
+                type="primary",
+            ):
+                if _normalize_text(answer) == _normalize_text(correct_answer):
+                    st.success("🎉 Correct!")
+                    st.session_state.current_page += 1
+                    time.sleep(0.5)
+                    st.rerun()
+                else:
+                    st.error("Not quite right! Try a different answer. 💪")
+
+    # ── RIGHT: image ──────────────────────────────────────────────
+    with right_col:
+        if page_idx < len(images) and images[page_idx]:
+            st.image(images[page_idx], use_column_width=True)
