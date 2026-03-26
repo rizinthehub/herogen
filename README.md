@@ -1,4 +1,5 @@
 
+
 # 📚 HeroGen — AI-Powered Personalized Storybook Generator
 
 <p align="center">
@@ -45,17 +46,38 @@ HeroGen is an AI-powered web application that generates **personalized education
 
 ---
 
+## 🖥️ Screenshots
+
+<details>
+<summary>Click to view screenshots</summary>
+
+### Home Page
+> Landing page with logo, tagline, and "How It Works" section
+
+### Create Story
+> Form to enter child's name, age, moral theme, and upload photo
+
+### Story Reader
+> Side-by-side image and text with interactive quiz and progress bar
+
+### Dashboard
+> Download storybook, coloring pages, and teacher's guide PDFs
+
+</details>
+
+---
+
 ## 🏗️ Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Streamlit (Python) |
-| AI Text | OpenAI GPT-4o-mini |
-| AI Images | OpenAI DALL-E 3 / Replicate InstantID |
-| Database | MongoDB Atlas (Free Tier) |
-| PDF Engine | FPDF2 + Pillow |
-| Hosting | Streamlit Community Cloud (Free) |
-| Version Control | Git + GitHub |
+```
+Frontend:    Streamlit (Python)
+AI Text:     OpenAI GPT-4o-mini
+AI Images:   OpenAI DALL-E 3 / Replicate InstantID
+Database:    MongoDB Atlas (Free Tier)
+PDF Engine:  FPDF2 + Pillow
+Hosting:     Streamlit Community Cloud (Free)
+Version Control: Git + GitHub
+```
 
 ---
 
@@ -70,17 +92,17 @@ herogen/
 │   └── secrets.toml         # API keys (not in repo)
 ├── assets/
 │   ├── style.css            # Custom CSS theme
-│   ├── HeroGenLogo.png      # Shield logo (no text)
+│   ├── HeroGenLogo.png      # Shield logo
 │   └── HeroGenLogoText.png  # Logo with text
 ├── services/
 │   ├── ai_text.py           # Story generation (OpenAI)
-│   ├── ai_image.py          # Image generation (DALL-E 3)
-│   ├── pdf_maker.py         # PDF generation
+│   ├── ai_image.py          # Image generation (DALL-E 3 / Replicate)
+│   ├── pdf_maker.py         # PDF generation (Storybook, Coloring, EduSheet)
 │   └── db.py                # MongoDB connection & storage
 └── views/
     ├── home.py              # Landing page
-    ├── create.py            # Story creation form & loading
-    ├── reader.py            # Interactive story reader
+    ├── create.py            # Story creation form & loading screen
+    ├── reader.py            # Interactive story reader with quizzes
     └── dashboard.py         # Download page for PDFs
 ```
 
@@ -89,10 +111,9 @@ herogen/
 ## 🚀 Quick Start
 
 ### Prerequisites
-
 - Python 3.12+
-- OpenAI API Key — [Get one here](https://platform.openai.com/api-keys)
-- MongoDB Atlas Account — [Free tier](https://www.mongodb.com/cloud/atlas/register)
+- OpenAI API Key ([Get one here](https://platform.openai.com/api-keys))
+- MongoDB Atlas Account ([Free tier](https://www.mongodb.com/cloud/atlas/register))
 
 ### Setup
 
@@ -134,12 +155,12 @@ The app opens at `http://localhost:8501`
 
 ---
 
-## 💰 Cost Per Story
+## 💰 Cost
 
 | Service | Cost |
 |---------|------|
-| OpenAI (text + images) | ~$0.21 |
-| Replicate (optional face clone) | ~$0.20 |
+| OpenAI (per story) | ~$0.21 |
+| Replicate (optional) | ~$0.20 |
 | MongoDB Atlas | Free |
 | Streamlit Cloud | Free |
 | **Total per story** | **~$0.21** |
@@ -148,12 +169,11 @@ The app opens at `http://localhost:8501`
 
 ## 🌐 Deployment
 
-Deployed on **Streamlit Community Cloud**:
+The app is deployed on **Streamlit Community Cloud**:
 
 🔗 **Live App:** [herogen.streamlit.app](https://herogen-4mls8rwacmq34zv4vdqevp.streamlit.app)
 
 To deploy your own:
-
 1. Push code to GitHub
 2. Go to [share.streamlit.io](https://share.streamlit.io)
 3. Connect your repo → Add secrets → Deploy
@@ -164,12 +184,12 @@ To deploy your own:
 
 | Member | Role |
 |--------|------|
-| [rizinthehub](https://github.com/rizinthehub) | Project Lead, Backend AI Services |
-| [Imaadh-Rushdee](https://github.com/Imaadh-Rushdee) | PDF Engine, Database |
-| [kosaladathapththu](https://github.com/kosaladathapththu) | Frontend UI, Styling |
-| [Tharu127](https://github.com/Tharu127) | Testing, Documentation, Deployment |
+| rizinthehub | Project Lead, Backend AI Services |
+| Imaadh-Rushdee | PDF Engine, Database |
+| kosaladathapththu | Frontend UI, Styling |
+| Tharu127 | Testing, Documentation, Deployment |
 
-**Course:** Higher Diploma in Software Engineering  
+**Course:** Higher Diploma in Software Engineering
 **Institution:** National Institute of Business Management (NIBM)
 
 ---
@@ -183,4 +203,4 @@ This project is licensed under the MIT License.
 <p align="center">
   Made with ❤️ for little readers everywhere
 </p>
-```
+
