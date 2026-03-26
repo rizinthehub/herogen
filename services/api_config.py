@@ -16,3 +16,4 @@ IMAGE_MODEL = "black-forest-labs/FLUX.2-klein-4B"
 
 # ── MONGODB ───────────────────────────────────────────────────
 MONGODB_URI = os.getenv("MONGODB_URI")
+## mongodb+srv://herogen:herogen321@herogencluster.lycxwvm.mongodb.net/?retryWrites=true&w=majority&appName=HeroGenCluster
