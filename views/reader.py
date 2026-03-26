@@ -66,7 +66,7 @@ def show():
 
     with img_col:
         if page_idx < len(images) and images[page_idx]:
-            st.image(images[page_idx], use_container_width=True)
+            st.image(images[page_idx], use_column_width=True)
 
     with text_col:
         st.markdown(
@@ -144,7 +144,7 @@ def show():
     btn_l, btn_spacer, btn_r = st.columns([1, 2, 1])
 
     with btn_l:
-        if st.button("📖 Re-read Page", key=f"reread_{page_idx}", use_container_width=True):
+        if st.button("📖 Re-read Page", key=f"reread_{page_idx}"):
             st.rerun()
 
     with btn_r:
@@ -152,7 +152,6 @@ def show():
             "Continue ➡️",
             key=f"continue_{page_idx}",
             type="primary",
-            use_container_width=True,
         ):
             if _normalize_text(answer) == _normalize_text(correct_answer):
                 st.success("🎉 Correct!")

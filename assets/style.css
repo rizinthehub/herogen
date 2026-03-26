@@ -141,3 +141,27 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlockBorderWrapp
     border: 1px solid #E0ECF8 !important;
     padding: 32px !important;
 }
+
+/* ========== FIX EXPANDER OVERLAP ========== */
+div[data-testid="stExpander"] {
+    background: white !important;
+    border-radius: 12px !important;
+    border: 1px solid #E0ECF8 !important;
+}
+
+div[data-testid="stExpander"] div[data-testid="stVerticalBlockBorderWrapper"] {
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 8px !important;
+}
+
+div[data-testid="stExpander"] summary {
+    padding: 12px 16px !important;
+}
+
+div[data-testid="stExpander"] summary span {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+}
