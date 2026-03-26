@@ -3,6 +3,6 @@ openai
 replicate==0.25.0
 fpdf2==2.7.8
 pymongo
-Pillow
+Pillow>=11.0.0,<13.0.0
 requests
 python-dotenv
