@@ -18,6 +18,33 @@ def _validate_story_data(story_data):
     return story_data
 
 
+def _clean_story_data(story_data):
+    """Remove any unexpected fields GPT might add."""
+    allowed_page_keys = {"page_num", "text", "image_prompt", "quiz", "options", "correct_answer"}
+    allowed_edu_keys = {"vocab", "discussion"}
+    allowed_top_keys = {"title", "pages", "edu_sheet"}
+
+    # Remove unexpected top-level keys
+    extra_top = set(story_data.keys()) - allowed_top_keys
+    for key in extra_top:
+        del story_data[key]
+
+    # Remove unexpected page keys
+    for page in story_data.get("pages", []):
+        extra_keys = set(page.keys()) - allowed_page_keys
+        for key in extra_keys:
+            del page[key]
+
+    # Remove unexpected edu_sheet keys
+    edu = story_data.get("edu_sheet", {})
+    if isinstance(edu, dict):
+        extra_edu = set(edu.keys()) - allowed_edu_keys
+        for key in extra_edu:
+            del edu[key]
+
+    return story_data
+
+
 def generate_story(name, age, gender, moral):
     """Call OpenAI to generate a 5-page children's story as JSON."""
     client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -66,9 +93,10 @@ CONSTRAINTS:
 - The correct answer must clearly match the page story.
 - The wrong answer must be believable but incorrect.
 - Keep the story structure clear: beginning, middle, end.
+- Do NOT add any extra fields beyond what is specified below.
 
 OUTPUT FORMAT:
-Return ONLY valid JSON with this exact structure:
+Return ONLY valid JSON with this exact structure (no extra fields):
 {{
   "title": "A Creative Story Title",
   "pages": [
@@ -105,4 +133,5 @@ Return ONLY valid JSON with this exact structure:
     )
 
     story_data = json.loads(response.choices[0].message.content)
+    story_data = _clean_story_data(story_data)
     return _validate_story_data(story_data)
