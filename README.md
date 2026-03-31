@@ -46,26 +46,6 @@ HeroGen is an AI-powered web application that generates **personalized education
 
 ---
 
-## 🖥️ Screenshots
-
-<details>
-<summary>Click to view screenshots</summary>
-
-### Home Page
-> Landing page with logo, tagline, and "How It Works" section
-
-### Create Story
-> Form to enter child's name, age, moral theme, and upload photo
-
-### Story Reader
-> Side-by-side image and text with interactive quiz and progress bar
-
-### Dashboard
-> Download storybook, coloring pages, and teacher's guide PDFs
-
-</details>
-
----
 
 ## 🏗️ Tech Stack
 
